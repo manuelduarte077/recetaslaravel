@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoriaReceta;
 use App\Models\Receta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,11 @@ class RecetaController extends Controller
 	 */
 	public function index()
 	{
-		return view('recetas.index');
+//		Auth::user()->recetas->dd();
+
+		$recetas = auth()->user()->recetas;
+
+		return view('recetas.index')->with('recetas', $recetas);
 	}
 
 	/**
@@ -36,7 +41,11 @@ class RecetaController extends Controller
 
 //    	DB::table('categoria_receta')->get()->pluck('nombre', 'id')->dd();
 
-		$categorias = DB::table('categoria_receta')->get()->pluck('nombre', 'id');
+		// Obtener las categorias ( sin modelo )
+//		$categorias = DB::table('categoria_recetas')->get()->pluck('nombre', 'id');
+
+		// Con modelo
+		$categorias = CategoriaReceta::all(['id', 'nombre']);
 
 		return view('recetas.create')->with('categorias', $categorias);
 	}
@@ -67,14 +76,26 @@ class RecetaController extends Controller
 		$img->save();
 
 		// Almacenar en la bd ( sin modelo )
-		DB::table('recetas')->insert([
+		/*
+			DB::table('recetas')->insert([
+				'titulo' => $data['titulo'],
+				'preparacion' => $data['preparacion'],
+				'ingredientes' => $data['ingredientes'],
+				'imagen' => $ruta_imagen,
+				'user_id' => Auth::user()->id,
+				'categoria_id' => $data['categoria'],
+			]);
+		*/
+
+		// almacenar en la Bd (con modelo)
+		auth()->user()->recetas()->create([
 			'titulo' => $data['titulo'],
 			'preparacion' => $data['preparacion'],
 			'ingredientes' => $data['ingredientes'],
 			'imagen' => $ruta_imagen,
-			'user_id' => Auth::user()->id,
 			'categoria_id' => $data['categoria'],
 		]);
+
 
 		//Redireccionar
 		return redirect()->action([RecetaController::class, 'index']);

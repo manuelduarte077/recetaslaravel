@@ -7,5 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Receta extends Model
 {
-    use HasFactory;
+	// Campos que se van agregar
+	protected $fillable = [
+		'titulo',
+		'preparacion',
+		'ingredientes',
+		'imagen',
+		'categoria_id'
+	];
+
+
+	// Obtener la categoria de la receta via FK
+	public function categoria()
+	{
+		return $this->belongsTo(CategoriaReceta::class);
+	}
 }
