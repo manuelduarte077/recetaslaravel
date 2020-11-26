@@ -19,7 +19,11 @@ Route::get('/', function () {
 });
 
 
+//Route::get('/recetas', 'RecetaController@idex');
+
 
 Auth::routes();
 
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/recetas', [RecetaController::class, 'index'])->name('recetas.index');
+Route::get('/recetas/create', [RecetaController::class, 'create'])->name('recetas.create');
+Route::post('/recetas', [RecetaController::class, 'store'])->name('recetas.store');
