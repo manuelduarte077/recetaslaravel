@@ -28,6 +28,7 @@
 			</thead>
 
 			<tbody>
+				
 			@foreach($recetas as $receta )
 				<tr>
 					<td>{{ $receta->titulo  }}</td>
