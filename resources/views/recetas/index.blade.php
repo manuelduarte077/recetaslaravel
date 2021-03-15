@@ -1,51 +1,68 @@
 @extends('layouts.app')
 
-@section( 'botones' )
-
-	<a href="{{ route('recetas.create') }}" class="btn btn-primary mr-2 text-white">
-		<svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor"
-			 xmlns="http://www.w3.org/2000/svg">
-			<path fill-rule="evenodd"
-				  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-		</svg>
-		Crear Receta
-	</a>
-
+@section('botones')
+    @include('ui.navegacion')
 @endsection
 
-@section( 'content' )
+@section('content')
+    <h2 class="text-center mb-5">Administra tus recetas</h2>
 
-	<h1 class="text-center mb-5">Administra tus recetas</h1>
+    <div class="col-md-10 mx-auto bg-white p-3">
+        <table class="table">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th scole="col">Titulo</th>
+                    <th scole="col">Categoría</th>
+                    <th scole="col">Acciones</th>
+                </tr>
+            </thead>
 
-	<div class="col-md-10 mx-auto bg-white p-3">
-		<table class="table">
-			<thead class="bg-primary text-light">
-			<tr>
-				<th scope="col">Titulo</th>
-				<th scope="col">Categoria</th>
-				<th scope="col">Acciones</th>
-			</tr>
-			</thead>
+            <tbody>
 
-			<tbody>
-				
-			@foreach($recetas as $receta )
-				<tr>
-					<td>{{ $receta->titulo  }}</td>
-					<td>{{ $receta->categoria->nombre }}</td>
-					<td>
-						<a href="" class="btn btn-danger mr-1">Eliminar</a>
-						<a href="" class="btn btn-dark mr-1">Editar</a>
-						<a href="" class="btn btn-success mr-1">Ver</a>
-					</td>
-				</tr>
-			@endforeach
+                @foreach ($recetas as $receta)
+                    <tr>
+                        <td> {{$receta->titulo}} </td>
+                        <td> {{$receta->categoria->nombre}} </td>
+                        <td>
 
-			</tbody>
+                            <eliminar-receta
+                                receta-id={{$receta->id}}
+                            ></eliminar-receta>
 
-		</table>
-	</div>
+                            <a href="{{ route('recetas.edit', ['receta' => $receta->id]) }} " class="btn btn-dark d-block mb-2">Editar</a>
+                            <a href="{{ route('recetas.show', ['receta' => $receta->id]) }} " class="btn btn-success d-block">Ver</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <div class="col-12 mt-4 justify-content-center d-flex">
+            {{ $recetas->links() }}
+        </div>
+
+
+        <h2 class="text-center my-5">Recetas que te gustan</h2>
+        <div class="col-md-10 mx-auto bg-white p-3">
+
+            @if ( count( $usuario->meGusta ) > 0 )
+                <ul class="list-group">
+                    @foreach( $usuario->meGusta as $receta )
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p> {{$receta->titulo}}</p>
+
+                            <a class="btn btn-outline-success text-uppercase font-weight-bold" href="{{ route('recetas.show', ['receta' => $receta->id ])}}">Ver</a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-center">Aún no tienes recetas Guardadas
+                    <small> Dale me gusta a las recetas y aparecerán aquí</small>
+                </p>
+
+            @endif
+        </div>
+
+    </div>
 
 @endsection
-
-
